@@ -6,8 +6,8 @@ from bottle import request, response, route, get, run, default_app
 app = application = default_app()
 
 
-@route('/candidate/<application_id>', method=['POST'])
-def update_delete_handler(application_id):
+@route('/candidate/hired', method=['POST'])
+def update_delete_handler():
     response.content_type = 'application/json'
     return json.dumps({"hired": True})
 
