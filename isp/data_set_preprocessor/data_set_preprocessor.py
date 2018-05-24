@@ -44,7 +44,22 @@ def drop_unnamed(data_set):
     data_set = data_set.loc[:, ~data_set.columns.str.contains('^Unnamed')]
     return data_set
 
-def string_to_json(data_set, column):
+
+def extract_field(x, field):
+    return [i[field] for i in x]
+
+
+def json_to_bag_of_words(data_set, column, field):
     data_set[column] = data_set[column].apply(json.loads)
-    __import__('pdb').set_trace()
+    list_only = getattr(data_set, column).apply(lambda x: isinstance(x, list))
+    data_set = data_set[list_only]
+    data_set[column] = data_set[column].apply(extract_field, args=(field,))
+    return data_set
+
+
+def apply_tag(row, bow_field, tag_field):
     pass
+
+
+def tag_words(data_set, bow_field, tag_field):
+    data_set = data_set.apply(apply_tag, args=(bow_field, tag_field))

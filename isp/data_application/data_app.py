@@ -13,6 +13,7 @@ DATE = 'invitationDate'
 APPLICATION_TIME = 'applicationTime'
 IS_RETAKE = 'isRetake'
 SPEACH = 'speechToText'
+BOW_FIELD = 'name'
 
 DATA_SET_FILE = 'application_data.csv'
 
@@ -23,11 +24,12 @@ def parse_data_set():
     data_set = dpp.datetime_to_timestamp(data_set, DATE, APPLICATION_TIME)
     data_set = dpp.bool_to_num(data_set, IS_RETAKE)
     data_set = dpp.drop_unnamed(data_set)
-    data_set = dpp.string_to_json(data_set, SPEACH)
+    data_set = dpp.json_to_bag_of_words(data_set, SPEACH, BOW_FIELD)
+    data_set = dpp.tag_words(data_set, SPEACH, SCORE)
     return data_set
 
 
 def predict():
     data_set = parse_data_set()
-    mb.learn(data_set)
+    mb.learn(data_set, SPEACH)
     return
