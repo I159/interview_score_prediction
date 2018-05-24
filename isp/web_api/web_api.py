@@ -12,8 +12,7 @@ app = application = default_app()
 @route('/candidate/hired', method=['POST'])
 def is_hired():
     data_set = data_set_preprocessor.parse_data_set()
-    features = model_builder.FeatureModel(data_set)
-    __import__('pdb').set_trace()
+    model_builder.learn(data_set)
     response.content_type = 'application/json'
     return json.dumps({"hired": True})
 

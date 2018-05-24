@@ -51,5 +51,4 @@ def parse_data_set():
     data_set = datetime_to_timestamp(data_set)
     data_set = bool_to_num(data_set)
     data_set = drop_unnamed(data_set)
-    __import__('pdb').set_trace()
     return data_set
