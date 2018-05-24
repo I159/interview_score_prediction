@@ -9,10 +9,13 @@ goals:
 """
 import json
 import os
+import string
 
 from pandas import read_csv
 import pandas
 import numpy as np
+import nltk
+from nltk.corpus import stopwords
 
 
 def parse_csv(file_name):
@@ -46,10 +49,14 @@ def drop_unnamed(data_set):
 
 
 def extract_field(x, field):
-    return [i[field] for i in x]
+    def filter_fn(x): return x not in set(
+        stopwords.words('english')) and x not in set(
+        string.punctuation)
+    return [i[field] for i in x if filter_fn(i[field])]
 
 
 def json_to_bag_of_words(data_set, column, field):
+    print('Extracting bag of words...')
     data_set[column] = data_set[column].apply(json.loads)
     list_only = getattr(data_set, column).apply(lambda x: isinstance(x, list))
     data_set = data_set[list_only]
@@ -58,8 +65,11 @@ def json_to_bag_of_words(data_set, column, field):
 
 
 def apply_tag(row, bow_field, tag_field):
-    pass
+    tag = row[tag_field]
+    row[bow_field] = [(i, tag) for i in row[bow_field]]
+    return row
 
 
 def tag_words(data_set, bow_field, tag_field):
-    data_set = data_set.apply(apply_tag, args=(bow_field, tag_field))
+    data_set = data_set.apply(apply_tag, axis=1, args=(bow_field, tag_field))
+    return data_set
