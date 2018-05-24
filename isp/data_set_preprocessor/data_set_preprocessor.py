@@ -7,6 +7,7 @@ goals:
     * Remove broken data
     * Prepare for binary prediction modeling
 """
+import json
 import os
 
 from pandas import read_csv
@@ -42,3 +43,8 @@ def bool_to_num(data_set, column):
 def drop_unnamed(data_set):
     data_set = data_set.loc[:, ~data_set.columns.str.contains('^Unnamed')]
     return data_set
+
+def string_to_json(data_set, column):
+    data_set[column] = data_set[column].apply(json.loads)
+    __import__('pdb').set_trace()
+    pass

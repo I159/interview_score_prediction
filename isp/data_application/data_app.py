@@ -12,6 +12,7 @@ SCORE = 'score'
 DATE = 'invitationDate'
 APPLICATION_TIME = 'applicationTime'
 IS_RETAKE = 'isRetake'
+SPEACH = 'speechToText'
 
 DATA_SET_FILE = 'application_data.csv'
 
@@ -22,6 +23,7 @@ def parse_data_set():
     data_set = dpp.datetime_to_timestamp(data_set, DATE, APPLICATION_TIME)
     data_set = dpp.bool_to_num(data_set, IS_RETAKE)
     data_set = dpp.drop_unnamed(data_set)
+    data_set = dpp.string_to_json(data_set, SPEACH)
     return data_set
 
 

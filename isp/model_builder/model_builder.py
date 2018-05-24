@@ -18,6 +18,19 @@ def build_feature_model(train_set, test_set):
 
 
 def learn(data_set):
+    # Build flat tagged data frame separating json text based data
+    # Build tagged text data frame
+    # Build multi tag data frame built with words as tags
+
+    # Extract features from text series
+    # Extract features from multi tag data frame
+
+    # Learn a model with text features
+    # Learn a model with multi tag text features
+    # Learn a flat model
+
+    # Cascade estimators http://scikit-learn.org/stable/modules/pipeline.html
+
     train_set, test_set = train_test_split(data_set, test_size=0.33)
     train_set = build_feature_model(train_set, test_set)
     __import__('pdb').set_trace()
