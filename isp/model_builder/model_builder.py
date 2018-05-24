@@ -1,3 +1,8 @@
+"""
+Data architecture agnostic modeling tool set.
+
+Build automated model for binary prediction.
+"""
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 from sklearn.model_selection import train_test_split
@@ -16,4 +21,4 @@ def learn(data_set):
     train_set, test_set = train_test_split(data_set, test_size=0.33)
     train_set = build_feature_model(train_set, test_set)
     __import__('pdb').set_trace()
-    pass
+    return
