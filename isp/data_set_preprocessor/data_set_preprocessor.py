@@ -16,6 +16,7 @@ import pandas
 import numpy as np
 import nltk
 from nltk.corpus import stopwords
+from nltk.text import TextCollection
 
 
 def parse_csv(file_name):
@@ -49,27 +50,46 @@ def drop_unnamed(data_set):
 
 
 def extract_field(x, field):
-    def filter_fn(x): return x not in set(
-        stopwords.words('english')) and x not in set(
-        string.punctuation)
-    return [i[field] for i in x if filter_fn(i[field])]
+    try:
+        return ' '.join([i[field] for i in x])
+    except Exception as e:
+        print(x)
 
 
-def json_to_bag_of_words(data_set, column, field):
-    print('Extracting bag of words...')
+def extract_text(data_set, column, field):
     data_set[column] = data_set[column].apply(json.loads)
-    list_only = getattr(data_set, column).apply(lambda x: isinstance(x, list))
-    data_set = data_set[list_only]
+    data_set = data_set[getattr(data_set, column).apply(
+        lambda x: isinstance(x, list))]
     data_set[column] = data_set[column].apply(extract_field, args=(field,))
     return data_set
 
 
-def apply_tag(row, bow_field, tag_field):
-    tag = row[tag_field]
-    row[bow_field] = [(i, tag) for i in row[bow_field]]
-    return row
+def tokenize_text(data_set, column):
+    stem = nltk.stem.SnowballStemmer('english')
+    def tokenize(text):
+        text = nltk.word_tokenize(text.lower())
+        return [stem.stem(token) for token in text if token not in string.punctuation]
 
-
-def tag_words(data_set, bow_field, tag_field):
-    data_set = data_set.apply(apply_tag, axis=1, args=(bow_field, tag_field))
+    data_set[column] = data_set[column].apply(tokenize)
     return data_set
+
+
+def vectorize_corpus(data_set):
+    # TODO: apply to whole series
+    texts = TextCollection(corpus)
+    for doc in corpus:
+        yield {
+            term: texts.tf_idf(term, doc)
+            for term in doc
+        }
+
+
+# def apply_tag(row, bow_field, tag_field):
+    # tag = row[tag_field]
+    # row[bow_field] = {i: tag for i in row[bow_field]}
+    # return row
+
+
+# def tag_words(data_set, bow_field, tag_field):
+    # data_set = data_set.apply(apply_tag, axis=1, args=(bow_field, tag_field))
+    # return data_set
