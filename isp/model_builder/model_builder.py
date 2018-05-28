@@ -24,6 +24,7 @@ def fit_text_model(train_set, column):
     # TODO: combine into a structure: [features, tag]
     return nltk.NaiveBayesClassifier.train(train_set)
 
+
 def build_feature_model(data_set, bow_column):
     train_set, test_set = train_test_split(data_set, test_size=0.33)
 

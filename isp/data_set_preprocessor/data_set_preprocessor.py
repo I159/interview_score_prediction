@@ -9,7 +9,6 @@ goals:
 """
 import json
 import os
-import string
 
 from pandas import read_csv
 import pandas
@@ -65,8 +64,6 @@ def extract_text(data_set, column, field):
         lambda x: isinstance(x, list))]
     data_set[column] = data_set[column].apply(extract_field, args=(field,))
     return data_set
-
-
 
 
 # def apply_tag(row, bow_field, tag_field):

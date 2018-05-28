@@ -18,5 +18,6 @@ def is_hired():
     response.content_type = 'application/json'
     return json.dumps({"hired": hired})
 
+
 def main():
     run(host='localhost', port=8080)
