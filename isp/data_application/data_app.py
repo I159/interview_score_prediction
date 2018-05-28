@@ -25,8 +25,6 @@ def parse_data_set():
     data_set = dpp.bool_to_num(data_set, IS_RETAKE)
     data_set = dpp.drop_unnamed(data_set)
     data_set = dpp.extract_text(data_set, SPEACH, BOW_FIELD)
-    data_set = dpp.tokenize_text(data_set)
-    data_set = dpp.vectorize_corpus(data_set)
     return data_set
 
 

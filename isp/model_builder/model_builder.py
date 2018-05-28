@@ -8,33 +8,33 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import chi2
 from sklearn.model_selection import train_test_split
 import nltk
+from sklearn.feature_extraction import text
 
 
 FEATURES_NUM = 6
 
 
-def build_text_feature_model(data_set, bow_column):
-    print('Text classifier is fitting. It could take a couple of minutes...')
-    data_set = data_set[bow_column]
-    tfidf_vec = TfidfVectorizer()
-    __import__('pdb').set_trace()
-    # TODO: concatenate data set items into a single bag of words.
-    features = tfidf_vec.fit_transform(data_set)
-    pass
-    # classifier = nltk.classify.DecisionTreeClassifier.train(
-        # train_set, entropy_cutoff=0, support_cutoff=0)
-    # return classifier
+def fit_text_model(train_set, column):
+    vectorizer = text.TfidfVectorizer(min_df=1)
 
+    def vectorize(text):
+        return vectorizer.fit_transform(text)
 
-def build_feature_model(data_set):
+    train_set[column] = train_set[column].apply(vectorize)
+    # TODO: combine into a structure: [features, tag]
+    return nltk.NaiveBayesClassifier.train(train_set)
+
+def build_feature_model(data_set, bow_column):
     train_set, test_set = train_test_split(data_set, test_size=0.33)
+
+    text_model = fit_text_model(test_set, bow_column)
+    # TODO: use prediction of a text model as a field in the super-model
+
     selection_test = SelectKBest(score_func=chi2, k=FEATURES_NUM)
     fit = selection_test.fit(train_set, test_set)
     return fit.transform(train_set)
 
 
 def learn(data_set, bow_column):
-    bow_model = build_text_feature_model(data_set, bow_column)
-    __import__('pdb').set_trace()
-    # train_set = build_feature_model(train_set, test_set)
+    bow_model = build_feature_model(data_set, bow_column)
     pass

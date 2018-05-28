@@ -51,37 +51,22 @@ def drop_unnamed(data_set):
 
 def extract_field(x, field):
     try:
-        return ' '.join([i[field] for i in x])
+        return ' '.join([i[field] for i in x if i[field]]).split('.')
     except Exception as e:
         print(x)
 
 
 def extract_text(data_set, column, field):
     data_set[column] = data_set[column].apply(json.loads)
+    data_set[column] = data_set[column].apply(
+        lambda y: np.nan if len(y) == 0 else y)
+    data_set.dropna(subset=[column], inplace=True)
     data_set = data_set[getattr(data_set, column).apply(
         lambda x: isinstance(x, list))]
     data_set[column] = data_set[column].apply(extract_field, args=(field,))
     return data_set
 
 
-def tokenize_text(data_set, column):
-    stem = nltk.stem.SnowballStemmer('english')
-    def tokenize(text):
-        text = nltk.word_tokenize(text.lower())
-        return [stem.stem(token) for token in text if token not in string.punctuation]
-
-    data_set[column] = data_set[column].apply(tokenize)
-    return data_set
-
-
-def vectorize_corpus(data_set):
-    # TODO: apply to whole series
-    texts = TextCollection(corpus)
-    for doc in corpus:
-        yield {
-            term: texts.tf_idf(term, doc)
-            for term in doc
-        }
 
 
 # def apply_tag(row, bow_field, tag_field):
